@@ -108,7 +108,8 @@ def user_logout(request: HttpRequest) -> HttpResponse:
 def dashboard(request: HttpRequest) -> HttpResponse:
 
     upcoming_appointments = Appointment.objects.filter(
-        appointment_start_datetime__gt=now()
+        appointment_start_datetime__gt=now(),
+        application__user=request.user
     )
 
     peding_payments = Payment.objects.filter(

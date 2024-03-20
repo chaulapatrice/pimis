@@ -13,10 +13,10 @@
             <div class="card-body">
                 <h5 class="card-title fw-bold mb-3">Applications</h5>
                 <p class="card-text">Manage your ID and Passport applications online in the comfort of your home.</p>
-                <a href="{% url 'submit_application' %}" class="fw-bold btn btn-outline-primary">
+                <a href="{% url 'submit_application' %}" class="fw-bold btn btn-sm btn-outline-primary">
                     <i class="bi bi-plus-square-dotted"></i> New Application
                 </a>
-                <a href="{% url 'application_list' %}" class="fw-bold btn btn-outline-secondary">
+                <a href="{% url 'application_list' %}" class="fw-bold btn btn-sm btn-outline-secondary">
                     <i class="bi bi-heart-arrow"></i> Go to Applications
                 </a>
             </div>
@@ -36,7 +36,7 @@
                             <div class="fw-bold">{{appointment.application.title}} / {{appointment.title}}</div>
                             {{appointment.appointment_start_datetime}} - {{appointment.appointment_end_datetime}}
                         </div>
-                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-outline-dark btn-sm">
+                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-outline-dark btn-sm fw-bold">
                             <i class="bi bi-calendar2-plus"></i> Add to Calendar
                         </a>
                     </li>
@@ -57,7 +57,7 @@
                         <div class="ms-2 me-auto">
                             <div class="fw-bold">{{payment.application.title}} / {{payment.description}}</div>
                         </div>
-                        <a href="{{payment.paynow_redirect_url}}" class="btn btn-sm btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
+                        <a href="{{payment.paynow_redirect_url}}" class="btn btn-sm fw-bold btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
                     </li>
                     {% endfor %}
                 </ol>

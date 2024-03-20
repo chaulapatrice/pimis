@@ -45,13 +45,13 @@ class Application(models.Model):
         if self.status == Application.Status.PENDING:
             return 'bg-secondary'
         if self.status == Application.Status.APPLICATION_RECEIVED:
-            return 'bg-info text-dark'
+            return 'bg-info'
         if self.status == Application.Status.APPLICATION_REJECTED:
             return 'bg-danger'
         if self.status == Application.Status.APPOINTMENT_SCHEDULED:
-            return 'bg-info text-dark'
+            return 'bg-info'
         if self.status == Application.Status.PROCESSING:
-            return 'bg-info text-dark'
+            return 'bg-info'
         if self.status == Application.Status.READY_FOR_COLLECTION:
             return 'bg-success'
         if self.status == Application.Status.APPLICATION_COMPLETED:

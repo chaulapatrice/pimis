@@ -31,9 +31,17 @@
         }
 
         body {
-            background: linear-gradient(0deg, rgba(33, 37, 41, 0.8), rgba(33, 37, 41, 0.8)), url("{% static 'core/img/bg.jpg' %}");
+            background: linear-gradient(0deg, rgba(33, 37, 41, 0.95), rgba(33, 37, 41, 0.99)), url("{% static 'core/img/bg.jpg' %}");
             background-position: center;
             background-size: cover;
+        }
+
+        .breadcrumb {
+            box-shadow: none;
+        }
+
+        select{
+            box-shadow: none;
         }
     </style>
 </head>
@@ -69,13 +77,13 @@
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <input type="hidden" name="signout" value="1" />
-                        <button type="submit" class="btn btn-outline-dark">
+                        <button type="submit" class="btn btn-sm fw-bold btn-outline-dark">
                             <i class="bi bi-box-arrow-right"></i> Log out
                         </button>
                     </form>
                     {% else %}
-                    <a href="{% url 'signup' %}" class="btn btn-primary fw-bold me-2">Sign Up</a>
-                    <a href="{% url 'signin' %}" class="btn btn-outline-primary fw-bold me-2">Sign In</a>
+                    <a href="{% url 'signup' %}" class="btn btn-sm fw-bold btn-primary fw-bold me-2">Sign Up</a>
+                    <a href="{% url 'signin' %}" class="btn btn-sm fw-bold btn-outline-primary fw-bold me-2">Sign In</a>
                     {% endif %}
                 </div>
             </div>

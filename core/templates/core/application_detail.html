@@ -23,7 +23,7 @@
         </div>
         <div class="col-md-6 row">
             <div class="text-end">
-                <a href="{% url 'update_application' application.pk %}" class="btn btn-outline-primary ">
+                <a href="{% url 'update_application' application.pk %}" class="btn btn-sm btn-outline-primary ">
                     <i class="bi bi-pen"></i> Edit
                 </a>
             </div>
@@ -95,7 +95,7 @@
                 <td>{{appointment.location}}</td>
                 <td class="text-end">
                     <p>
-                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-outline-dark">Add
+                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-sm fw-bold btn-outline-dark">Add
                             to Calendar</a>
                     </p>
                 </td>
@@ -132,7 +132,7 @@
 
                 <td class="text-end">
                     {% if payment.status == 'Pending' %}
-                    <a href="{{payment.paynow_redirect_url}}" class="btn btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
+                    <a href="{{payment.paynow_redirect_url}}" class="btn btn-sm fw-bold btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
                     {% endif %}
                 </td>
             </tr>
