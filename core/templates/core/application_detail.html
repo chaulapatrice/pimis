@@ -1,0 +1,143 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+        <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'application_list' %}">Applications</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{{application.title}}</li>
+    </ol>
+</nav>
+<div class="p-3 mt-5">
+    <div class="row my-2">
+        <div class="col-md-6">
+            <h3>{{application.title}}</h3>
+            <p>
+                <span class="badge bborder fw-bold rounded-pill {{application.status_class}}">
+                    {% if application.status == 'Application Completed' %}
+                    <i class="bi bi-check-circle-fill"></i>
+                    {% endif %}
+                    {{application.status|upper}}
+                </span>
+            </p>
+        </div>
+        <div class="col-md-6 row">
+            <div class="text-end">
+                <a href="{% url 'update_application' application.pk %}" class="btn btn-outline-primary ">
+                    <i class="bi bi-pen"></i> Edit
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 pe-5">
+            <h5>Person Details</h5>
+
+            <!--Full name-->
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Full Name:</strong>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-end">
+                        {{application.applicant.first_name}} {{application.applicant.last_name}}
+                    </div>
+                </div>
+            </div>
+
+            <!--Date Of Birth-->
+            <div class="row">
+                <div class="col-md-6">
+                    <strong>Date Of Birth:</strong>
+                </div>
+                <div class="col-md-6">
+                    <div class="text-end">
+                        {{application.applicant.date_of_birth}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 pe-5">
+            <h5>Address</h5>
+            <p>
+                {{application.applicant.street}} <br />
+                {{application.applicant.suburb}} <br />
+                {{application.applicant.city}} <br />
+            </p>
+        </div>
+
+        <div class="col-md-4">
+            <h5>Attachments</h5>
+            <p><a href="{{application.applicant.birth_certificate.url}}" target="_blank">Birth Certificate</a></p>
+            {%if application.applicant.national_id %}
+            <p><a href="{{application.applicant.national_id.url}}" target="_blank">National ID</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <h5>Appointments</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Agenda</th>
+                <th>Date</th>
+                <th>Venue</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for appointment in application.appointments.all %}
+            <tr>
+                <td style="max-width: 600px;">{{appointment.agenda}}</td>
+                <td>{{appointment.appointment_start_datetime}} - {{appointment.appointment_start_datetime}}</td>
+                <td>{{appointment.location}}</td>
+                <td class="text-end">
+                    <p>
+                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-outline-dark">Add
+                            to Calendar</a>
+                    </p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h5>Payments</h5>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in application.payments.all %}
+            <tr>
+                <td>{{payment.description}}</td>
+                <td>
+                    {{payment.amount}}
+                </td>
+                <td>
+                    <span class="badge bborder fw-bold rounded-pill {{payment.status_class}}">
+                        {% if payment.status == 'Completed' %}
+                        <i class="bi bi-check-circle-fill"></i>
+                        {% endif %}
+                        {{payment.status|upper}}
+                    </span>
+                </td>
+
+                <td class="text-end">
+                    {% if payment.status == 'Pending' %}
+                    <a href="{{payment.paynow_redirect_url}}" class="btn btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

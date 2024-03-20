@@ -1,0 +1,68 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb text-white bg-dark">
+        <li class="breadcrumb-item text-white active" aria-current="page">Dashboard</li>
+    </ol>
+</nav>
+<h1 class="mt-5">Welcome, {{request.user.first_name}}</h1>
+<div class="row mt-3">
+    <div class="col-md-12">
+        <div class="p-3">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-3">Applications</h5>
+                <p class="card-text">Manage your ID and Passport applications online in the comfort of your home.</p>
+                <a href="{% url 'submit_application' %}" class="fw-bold btn btn-outline-primary">
+                    <i class="bi bi-plus-square-dotted"></i> New Application
+                </a>
+                <a href="{% url 'application_list' %}" class="fw-bold btn btn-outline-secondary">
+                    <i class="bi bi-heart-arrow"></i> Go to Applications
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="p-3">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-3">Appointments</h5>
+                <p class="card-text">Receive upcoming appointments from the Registrar. You can add them to your calendar
+                    so you do not forget.</p>
+                <h6 class="fw-bold">Upcoming appointments</h6>
+                <ol class="list-group bg-dark list-group-numbered">
+                    {% for appointment in appointments %}
+                    <li class="list-group-item bborder d-flex justify-content-between align-items-center">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{appointment.application.title}} / {{appointment.title}}</div>
+                            {{appointment.appointment_start_datetime}} - {{appointment.appointment_end_datetime}}
+                        </div>
+                        <a href="{{appointment.add_to_calendar_url}}" target="_blank" class="btn btn-outline-dark btn-sm">
+                            <i class="bi bi-calendar2-plus"></i> Add to Calendar
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="p-3">
+            <div class="card-body">
+                <h5 class="card-title fw-bold mb-3">Payments</h5>
+                <p class="card-text">Make payments of your application online without visiting the Registrar.</p>
+                <h6 class="fw-bold">Pending payments</h6>
+                <ol class="list-group bg-dark list-group-numbered">
+                    {% for payment in pending_payments %}
+                    <li class="list-group-item bborder d-flex justify-content-between align-items-center">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{payment.application.title}} / {{payment.description}}</div>
+                        </div>
+                        <a href="{{payment.paynow_redirect_url}}" class="btn btn-sm btn-outline-success"><i class="bi bi-credit-card"></i> Make Payment</a>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

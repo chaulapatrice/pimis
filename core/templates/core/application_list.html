@@ -1,0 +1,32 @@
+{% extends "./base.html" %}
+
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+      <li class="breadcrumb-item"><a class="text-white" href="/">Dashboard</a></li>
+      <li class="breadcrumb-item text-white active" aria-current="page">Applications</li>
+    </ol>
+  </nav>
+<h3 class="my-2 mt-5">Applications</h3>
+<a href="{% url 'submit_application' %}" class="btn btn-outline-primary my-2">
+    <i class="bi bi-plus-square-dotted"></i> New Application
+</a>
+<div class="list-group bg-dark my-2">
+    {% for application in applications %}
+    <a href="{% url 'application_detail' application.pk %}" class="list-group-item list-group-item-action flex-column align-items-start bborder-bottom">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1 text-white fw-bold">{{application.title}}</h5>
+            <p>
+                <span class="badge bborder fw-bold rounded-pill {{application.status_class}}">
+                    {% if application.status == 'Application Completed' %}
+                    <i class="bi bi-check-circle-fill"></i>
+                    {% endif %}
+                    {{application.status|upper}}
+                </span>
+            </p>
+        </div>
+        <small class="text-muted">Submitted at {{application.created_at}}</small>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

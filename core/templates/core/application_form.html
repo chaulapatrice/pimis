@@ -1,0 +1,28 @@
+{% extends "./base.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb bg-dark">
+      <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'application_list' %}">Applications</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Submit</li>
+    </ol>
+  </nav>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-8">
+        <h3>{{title}}</h3>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% crispy form %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    $(function () {
+        $('#id_date_of_birth').datepicker()
+    })
+</script>
+{% endblock %}
