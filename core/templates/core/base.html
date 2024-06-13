@@ -31,7 +31,7 @@
         }
 
         body {
-            background: linear-gradient(0deg, rgba(33, 37, 41, 0.95), rgba(33, 37, 41, 0.99)), url("{% static 'core/img/bg.jpg' %}");
+            background: linear-gradient(0deg, rgba(33, 37, 41, 0.85), rgba(33, 37, 41, 0.9)), url("{% static 'core/img/bg.jpg' %}");
             background-position: center;
             background-size: cover;
         }
@@ -43,10 +43,17 @@
         select{
             box-shadow: none;
         }
+
+        .wrapper {
+            width: 100%;
+            height: 100vh;
+            overflow-y: scroll;
+        }
     </style>
 </head>
 
 <body class="bg-dark">
+    <div class="wrapper">
     <nav class="navbar navbar-expand-lg navbar-light border-bottom">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="/">PiMIS</a>
@@ -100,6 +107,7 @@
 
     {% block javascript %}
     {% endblock %}
+    </div>
 </body>
 
 </html>

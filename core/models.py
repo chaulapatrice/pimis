@@ -85,9 +85,17 @@ class ApplicantDetails(models.Model):
 class Appointment(models.Model):
     title = models.CharField(max_length=255)
     agenda = models.TextField()
-    appointment_start_datetime = models.DateTimeField()
-    appointment_end_datetime = models.DateTimeField()
-    venue = models.CharField(max_length=255)
+    start = models.DateTimeField()
+    end = models.DateTimeField()
+
+    class Venue(models.TextChoices):
+        HARARE = 'Harare', 'Harare'
+        GWERU = 'Gweru', 'Gweru'
+        MBERENGWA = 'Mberengwa', 'Mberengwa'
+        BULAWAYO = 'Bulawayo', 'Bulawayo'
+        MASVINGO = 'Masvingo', 'Masvingo'
+
+    venue = models.CharField(max_length=255, choices=Venue)
     application = models.ForeignKey(
         "Application", on_delete=models.CASCADE, related_name="appointments")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,12 +107,13 @@ class Appointment(models.Model):
     def add_to_calendar_url(self):
         base_url = "https://calendar.google.com/calendar/render?action=TEMPLATE"
         title = quote(self.title)
-        start_datetime = self.appointment_start_datetime.strftime(
+        details = quote(self.agenda)
+        start_datetime = self.start.strftime(
             "%Y%m%dT%H%M%S")
-        end_datetime = self.appointment_end_datetime.strftime("%Y%m%dT%H%M%S")
+        end_datetime = self.end.strftime("%Y%m%dT%H%M%S")
         location = quote(self.venue)
 
-        return f"{base_url}&text={title}&dates={start_datetime}/{end_datetime}&location={location}&sf=true&output=xml"
+        return f"{base_url}&text={title}&dates={start_datetime}/{end_datetime}&location={location}&sf=true&output=xml&details={details}"
 
 
 class Payment(models.Model):
@@ -119,7 +128,8 @@ class Payment(models.Model):
     status = models.CharField(choices=Status, default=Status.PENDING)
     application = models.ForeignKey(
         "Application", on_delete=models.CASCADE, related_name="payments")
-    paynow_redirect_url = models.CharField(max_length=255, null=True, blank=True)
+    paynow_redirect_url = models.CharField(
+        max_length=255, null=True, blank=True)
     paynow_poll_url = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

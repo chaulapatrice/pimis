@@ -10,7 +10,7 @@ from .models import (
 
 class ApplicantDetailsInline(admin.StackedInline):
     model = ApplicantDetails
- 
+
 
 class PaymentInline(admin.TabularInline):
     model = Payment
@@ -32,4 +32,14 @@ class ApplicationModelAdmin(admin.ModelAdmin):
         ApplicantDetailsInline,
         PaymentInline,
         AppointmentInline
+    ]
+
+
+@admin.register(Appointment)
+class AppointmentModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'title',
+        'agenda',
+        'start',
+        'end'
     ]

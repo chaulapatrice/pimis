@@ -1,5 +1,5 @@
 from django import forms
-from .models import Application
+from .models import Application, Appointment
 from crispy_forms.layout import Layout, Submit, Row, Column
 from crispy_forms.helper import FormHelper
 
@@ -16,6 +16,7 @@ class ApplicationForm(forms.Form):
     street = forms.CharField()
     suburb = forms.CharField()
     city = forms.CharField()
+    venue = forms.ChoiceField(choices=Appointment.Venue)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -33,8 +34,10 @@ class ApplicationForm(forms.Form):
                 Column('street', css_class='form-group col-6 mb-0'),
                 Column('suburb', css_class='form-group col-6 mb-0'),
                 Column('city', css_class='form-group col-12 mb-0'),
+                Column('venue',
+                       css_class='form-group col-12 mb-0'),
                 Column('is_this_application_for_someone_else',
-                       css_class='form-group col-6 mb-0'),
+                       css_class='form-group col-6 mb-0')
             ),
 
             Submit('submit', 'Submit Application',
@@ -54,6 +57,7 @@ class UpdateApplicationForm(forms.Form):
     street = forms.CharField()
     suburb = forms.CharField()
     city = forms.CharField()
+    venue = forms.ChoiceField(choices=Appointment.Venue)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -72,6 +76,8 @@ class UpdateApplicationForm(forms.Form):
                 Column('suburb', css_class='form-group col-6 mb-0'),
                 Column('city', css_class='form-group col-12 mb-0'),
                 Column('is_this_application_for_someone_else',
+                       css_class='form-group col-6 mb-0'),
+                Column('venue',
                        css_class='form-group col-6 mb-0'),
             ),
 

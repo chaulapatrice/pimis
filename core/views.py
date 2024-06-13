@@ -20,6 +20,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.csrf import csrf_exempt
 from enum import Enum
 from .utils import now
+from datetime import timedelta
 
 
 # Create your views here.
@@ -108,7 +109,7 @@ def user_logout(request: HttpRequest) -> HttpResponse:
 def dashboard(request: HttpRequest) -> HttpResponse:
 
     upcoming_appointments = Appointment.objects.filter(
-        appointment_start_datetime__gt=now(),
+        start__gt=now(),
         application__user=request.user
     )
 
@@ -159,6 +160,43 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                     application=application
                 )
 
+                try:
+                    latest_appointment = Appointment.objects.latest(
+                        'created_at')
+
+                    start = latest_appointment.end + timedelta(minutes=5)
+                    end = start + timedelta(minutes=20)
+                    Appointment.objects.create(
+                        title="Documents Submission",
+                        agenda="At the Documents Submission appointment, we will verify and review all required documents "
+                        "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
+                        "submission. We will also outline any next steps and conclude with a brief Q&A session to "
+                        "address any remaining questions or concerns.",
+                        start=start,
+                        end=end,
+                        venue=cd.get('venue'),
+                        application=application
+                    )
+                except Appointment.DoesNotExist:
+                    start = now() + timedelta(days=2)
+                    end = now() + timedelta(days=2, minutes=20)
+                    Appointment.objects.create(
+                        title="Documents Submission",
+                        agenda="At the Documents Submission appointment, we will verify and review all required documents "
+                        "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
+                        "submission. We will also outline any next steps and conclude with a brief Q&A session to "
+                        "address any remaining questions or concerns.",
+                        start=start,
+                        end=end,
+                        venue=cd.get('venue'),
+                        application=application
+                    )
+
+                Payment.objects.create(
+                    description='Application Fee',
+                    application=application,
+                    amount=20
+                )
                 return redirect(application)
 
     return render(request, "core/application_form.html", {
