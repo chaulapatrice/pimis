@@ -23,7 +23,11 @@
 {% block javascript %}
 <script type="text/javascript">
     $(function () {
-        $('#id_date_of_birth').datepicker()
+        $('#id_date_of_birth').datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-100:-18"
+        })
     })
 </script>
 {% endblock %}

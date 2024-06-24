@@ -152,7 +152,7 @@ def post_save_payment(sender, instance: Payment, created, **kwargs):
         with transaction.atomic():
             current_site = Site.objects.get(pk=getattr(settings, 'SITE_ID'))
 
-            return_url = current_site.domain + reverse('application_detail', kwargs={
+            return_url = "http://localhost:8000" + reverse('application_detail', kwargs={
                 "pk": instance.application.pk
             })
 

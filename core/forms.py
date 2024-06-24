@@ -2,6 +2,7 @@ from django import forms
 from .models import Application, Appointment
 from crispy_forms.layout import Layout, Submit, Row, Column
 from crispy_forms.helper import FormHelper
+from django.core.validators import FileExtensionValidator
 
 
 class ApplicationForm(forms.Form):
@@ -11,8 +12,16 @@ class ApplicationForm(forms.Form):
     last_name = forms.CharField()
     date_of_birth = forms.DateField(
         widget=forms.TextInput())
-    birth_certificate = forms.FileField(required=True)
-    national_id = forms.FileField(required=False)
+    birth_certificate = forms.FileField(
+        required=True,
+        validators=[FileExtensionValidator(['pdf'])],
+        widget=forms.FileInput(attrs={'accept': 'application/pdf'})
+    )
+    national_id = forms.FileField(
+        required=False,
+        validators=[FileExtensionValidator(['pdf'])],
+        widget=forms.FileInput(attrs={'accept': 'application/pdf'})
+    )
     street = forms.CharField()
     suburb = forms.CharField()
     city = forms.CharField()

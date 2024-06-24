@@ -163,9 +163,30 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                 try:
                     latest_appointment = Appointment.objects.latest(
                         'created_at')
+                    
+                    last_end = latest_appointment.end
+                    current_time = now()
 
-                    start = latest_appointment.end + timedelta(minutes=5)
-                    end = start + timedelta(minutes=20)
+                    if last_end > current_time:
+                        # Check if the time is daylight 
+                        if current_time.hour >= 8 and current_time.hour <= 16:
+                            start = current_time + timedelta(minutes=5)
+                            end = start + timedelta(minutes=20)
+                        else:
+                            # Add 12 hours to go to daylight 
+                            start = current_time + timedelta(minutes=5, hours=12)
+                            end = start + timedelta(minutes=20)
+                    else:
+                        # Check if the time is daylight
+                        if current_time.hour >= 8 and current_time.hour <= 16:
+                            start = current_time + timedelta(minutes=5, hours=48)
+                            end = start + timedelta(minutes=20)
+                        else:
+                            # Add 12 hours to go to daylight
+                            start = current_time + timedelta(minutes=5, days=2, hours=12)
+                            end = start + timedelta(minutes=20)
+
+
                     Appointment.objects.create(
                         title="Documents Submission",
                         agenda="At the Documents Submission appointment, we will verify and review all required documents "
@@ -178,8 +199,15 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                         application=application
                     )
                 except Appointment.DoesNotExist:
-                    start = now() + timedelta(days=2)
-                    end = now() + timedelta(days=2, minutes=20)
+                    # Check if the time is daylight
+                    if current_time.hour >= 8 and current_time.hour <= 16:
+                        start = latest_appointment.end + timedelta(minutes=5, days=2)
+                        end = start + timedelta(minutes=20)
+                    else:
+                        # Add 12 hours to go to daylight
+                        start = latest_appointment.end + timedelta(minutes=5, days=2, hours=12)
+                        end = start + timedelta(minutes=20)
+
                     Appointment.objects.create(
                         title="Documents Submission",
                         agenda="At the Documents Submission appointment, we will verify and review all required documents "
