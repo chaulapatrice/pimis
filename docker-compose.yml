@@ -25,10 +25,7 @@ services:
       POSTGRES_NAME: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
-      SENTRY_DSN: ${SENTRY_DSN}
-      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
 volumes:
-  static: {}
-  media: {}
-  database_data: {}
+  static: { }
+  media: { }
+  database_data: { }

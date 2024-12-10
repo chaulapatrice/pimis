@@ -1,7 +1,6 @@
-from typing import Iterable
+import pytz
 from django.db import models
 from .utils import now
-from django.urls import reverse
 from urllib.parse import quote
 from django.dispatch import receiver
 from django.db.models.signals import post_save
@@ -10,6 +9,10 @@ from django.contrib.sites.models import Site
 from django.conf import settings
 from django.urls import reverse
 from django.db import transaction
+from openpyxl import Workbook
+from datetime import datetime
+
+
 # Create your models here.
 
 
@@ -26,14 +29,15 @@ class Application(models.Model):
         PROCESSING = "Processing", "Processing"
         READY_FOR_COLLECTION = "Ready For Collection", "Ready For Collection"
         APPLICATION_COMPLETED = "Application Completed", "Application Completed"
+
     status = models.CharField(
         max_length=45, choices=Status, default=Status.PENDING)
     is_application_for_someone_else = models.BooleanField(default=False)
     user = models.ForeignKey(
         'users.User', on_delete=models.CASCADE, related_name='applications')
     type = models.CharField(max_length=45, choices=Type)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=False)
+    updated_at = models.DateTimeField(auto_now=False)
 
     def title(self) -> str:
         return f"{self.type} application - {self.applicant.first_name} {self.applicant.last_name}"
@@ -180,7 +184,40 @@ def post_save_payment(sender, instance: Payment, created, **kwargs):
             response = paynow.send(payment)
 
             if response.success:
-                # Update payment in the database
                 instance.paynow_poll_url = response.poll_url
                 instance.paynow_redirect_url = response.redirect_url
                 instance.save()
+
+
+def generate_excel_report():
+    queryset = Application.objects.filter(
+        created_at__lte=datetime(2024, 11, 30, hour=23, minute=59, second=59)
+    ).exclude()
+    workbook = Workbook()
+    headers = [
+        'Date Created',
+        'Applicant Name',
+        'Application Status',
+        'Application Type',
+        'Total Revenue'
+    ]
+    worksheet = workbook.active
+    worksheet.append(headers)
+    processed_application_number = 1
+    total_application_count = queryset.count()
+    for application in queryset:
+        payments = Payment.objects.filter(application=application)
+        total_payments = sum([float(payment.amount) for payment in payments])
+        row = [
+            application.created_at.strftime("%Y-%m-%d"),
+            f"{application.applicant.first_name} {application.applicant.last_name}",
+            application.status,
+            application.type,
+            total_payments
+        ]
+
+        worksheet.append(row)
+        print("Processed Application >> ", f"{processed_application_number}/{total_application_count}")
+        processed_application_number += 1
+
+    workbook.save("/media/export.xlsx")

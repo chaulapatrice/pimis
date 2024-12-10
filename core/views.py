@@ -41,9 +41,11 @@ def user_signup(request: HttpRequest) -> HttpResponse:
                     last_name=cd.get('last_name'),
                     username=cd.get('email'),
                     email=cd.get('email'),
-                    password=cd.get('password'),
                     phone=cd.get('phone')
                 )
+
+                user.set_password(cd.get('password'))
+                user.save()
 
                 if user is not None:
                     login(request, user)
@@ -107,18 +109,17 @@ def user_logout(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def dashboard(request: HttpRequest) -> HttpResponse:
-
     upcoming_appointments = Appointment.objects.filter(
         start__gt=now(),
         application__user=request.user
     )
 
-    peding_payments = Payment.objects.filter(
+    pending_payments = Payment.objects.filter(
         status=Payment.Status.PENDING,
         application__user=request.user
     )
     return render(request, 'core/dashboard.html', {
-        "pending_payments": peding_payments,
+        "pending_payments": pending_payments,
         "appointments": upcoming_appointments
     })
 
@@ -160,39 +161,40 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                     application=application
                 )
 
+                current_time = now()
+
                 try:
+
                     latest_appointment = Appointment.objects.latest(
                         'created_at')
-                    
+
                     last_end = latest_appointment.end
-                    current_time = now()
 
                     if last_end > current_time:
                         # Check if the time is daylight 
                         if current_time.hour >= 8 and current_time.hour <= 16:
                             start = current_time + timedelta(minutes=5)
-                            end = start + timedelta(minutes=20)
+                            end = start + timedelta(minutes=5)
                         else:
                             # Add 12 hours to go to daylight 
                             start = current_time + timedelta(minutes=5, hours=12)
-                            end = start + timedelta(minutes=20)
+                            end = start + timedelta(minutes=5)
                     else:
                         # Check if the time is daylight
                         if current_time.hour >= 8 and current_time.hour <= 16:
                             start = current_time + timedelta(minutes=5, hours=48)
-                            end = start + timedelta(minutes=20)
+                            end = start + timedelta(minutes=5)
                         else:
                             # Add 12 hours to go to daylight
                             start = current_time + timedelta(minutes=5, days=2, hours=12)
-                            end = start + timedelta(minutes=20)
-
+                            end = start + timedelta(minutes=5)
 
                     Appointment.objects.create(
                         title="Documents Submission",
                         agenda="At the Documents Submission appointment, we will verify and review all required documents "
-                        "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
-                        "submission. We will also outline any next steps and conclude with a brief Q&A session to "
-                        "address any remaining questions or concerns.",
+                               "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
+                               "submission. We will also outline any next steps and conclude with a brief Q&A session to "
+                               "address any remaining questions or concerns.",
                         start=start,
                         end=end,
                         venue=cd.get('venue'),
@@ -201,19 +203,18 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                 except Appointment.DoesNotExist:
                     # Check if the time is daylight
                     if current_time.hour >= 8 and current_time.hour <= 16:
-                        start = latest_appointment.end + timedelta(minutes=5, days=2)
-                        end = start + timedelta(minutes=20)
+                        start = current_time + timedelta(minutes=5)
+                        end = start + timedelta(minutes=5)
                     else:
-                        # Add 12 hours to go to daylight
-                        start = latest_appointment.end + timedelta(minutes=5, days=2, hours=12)
-                        end = start + timedelta(minutes=20)
+                        start = current_time + timedelta(minutes=5, days=2, hours=12)
+                        end = start + timedelta(minutes=5)
 
                     Appointment.objects.create(
                         title="Documents Submission",
                         agenda="At the Documents Submission appointment, we will verify and review all required documents "
-                        "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
-                        "submission. We will also outline any next steps and conclude with a brief Q&A session to "
-                        "address any remaining questions or concerns.",
+                               "for accuracy, address any discrepancies, sign necessary forms, and provide a receipt of "
+                               "submission. We will also outline any next steps and conclude with a brief Q&A session to "
+                               "address any remaining questions or concerns.",
                         start=start,
                         end=end,
                         venue=cd.get('venue'),
