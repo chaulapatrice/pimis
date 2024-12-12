@@ -5,6 +5,6 @@ RUN apt update && apt install libpq-dev -y
 WORKDIR /code
 RUN pip install --upgrade pip
 COPY requirements.txt /code/
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.prod.txt
 COPY . /code/
 RUN chmod +x celery.sh
