@@ -68,19 +68,19 @@ def run_prediction_job(job_id: int):
         with transaction.atomic():
             with open('/media/actual.xlsx', 'rb') as f:
                 actual = File(f)
-                prediction_job.actual.save("results/actual.xlsx", actual, save=True)
+                prediction_job.actual.save("actual.xlsx", actual, save=True)
 
             with open('/media/forecast.xlsx', 'rb') as f:
                 forecast = File(f)
-                prediction_job.forecast.save("results/forecast.xlsx", forecast, save=True)
+                prediction_job.forecast.save("forecast.xlsx", forecast, save=True)
 
             with open('/media/actual_prediction.xlsx', 'rb') as f:
                 actual_prediction = File(f)
-                prediction_job.actual_prediction.save("results/actual_prediction.xlsx", actual_prediction, save=True)
+                prediction_job.actual_prediction.save("actual_prediction.xlsx", actual_prediction, save=True)
 
             with open('/media/graph.pdf', 'rb') as f:
                 graph = File(f)
-                prediction_job.graph.save("results/graph.pdf", graph, save=True)
+                prediction_job.graph.save("graph.pdf", graph, save=True)
 
             prediction_job.status = PredictionJob.Status.COMPLETED
             prediction_job.save()
