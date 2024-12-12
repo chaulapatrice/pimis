@@ -28,7 +28,7 @@ from datetime import timedelta
 
 def user_signup(request: HttpRequest) -> HttpResponse:
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/portal')
     error = None
     form = SignUpForm()
     if request.method == 'POST':
@@ -49,7 +49,7 @@ def user_signup(request: HttpRequest) -> HttpResponse:
 
                 if user is not None:
                     login(request, user)
-                    return redirect('/')
+                    return redirect('/portal')
                 else:
                     error = "Signup failed"
 
@@ -68,7 +68,7 @@ def user_signin(request: HttpRequest) -> HttpResponse:
     form = LoginForm()
 
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/portal')
 
     if request.method == 'POST':
         form = LoginForm(request.POST)
@@ -80,7 +80,7 @@ def user_signin(request: HttpRequest) -> HttpResponse:
                 )
                 if user is not None:
                     login(request, user)
-                    next = request.GET.get('next', '/')
+                    next = request.GET.get('next', '/portal')
                     return redirect(next)
                 else:
                     error = 'Invalid login credentials'
