@@ -4,7 +4,8 @@ from .models import (
     ApplicantDetails,
     Application,
     Payment,
-    Appointment
+    Appointment,
+    PredictionJob
 )
 
 
@@ -52,4 +53,24 @@ class AppointmentModelAdmin(admin.ModelAdmin):
         'agenda',
         'start',
         'end'
+    ]
+
+
+@admin.register(PredictionJob)
+class PredictionJobModelAdmin(admin.ModelAdmin):
+    list_display = [
+        'created_at',
+        'status',
+        'graph',
+        'actual',
+        'forecast',
+        'actual_prediction',
+    ]
+
+    readonly_fields = [
+        'status',
+        'graph',
+        'actual',
+        'forecast',
+        'actual_prediction',
     ]

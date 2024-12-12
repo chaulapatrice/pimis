@@ -2,15 +2,11 @@ import pytz
 from django.db import models
 from .utils import now
 from urllib.parse import quote
-from django.dispatch import receiver
-from django.db.models.signals import post_save
-from paynow import Paynow
-from django.contrib.sites.models import Site
-from django.conf import settings
 from django.urls import reverse
-from django.db import transaction
 from openpyxl import Workbook
 from datetime import datetime
+import boto3
+import os
 
 
 # Create your models here.
@@ -36,8 +32,8 @@ class Application(models.Model):
     user = models.ForeignKey(
         'users.User', on_delete=models.CASCADE, related_name='applications')
     type = models.CharField(max_length=45, choices=Type)
-    created_at = models.DateTimeField(auto_now_add=False)
-    updated_at = models.DateTimeField(auto_now=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def title(self) -> str:
         return f"{self.type} application - {self.applicant.first_name} {self.applicant.last_name}"
@@ -150,46 +146,7 @@ class Payment(models.Model):
         return f"Payment for {self.application.title()}"
 
 
-@receiver(post_save, sender=Payment)
-def post_save_payment(sender, instance: Payment, created, **kwargs):
-    if instance.paynow_poll_url == None:
-        with transaction.atomic():
-            current_site = Site.objects.get(pk=getattr(settings, 'SITE_ID'))
-
-            return_url = "http://localhost:8000" + reverse('application_detail', kwargs={
-                "pk": instance.application.pk
-            })
-
-            result_url = current_site.domain + reverse('paynow_webhook', kwargs={
-                "pk": instance.pk
-            })
-
-            paynow = Paynow(
-                getattr(settings, 'PAYNOW_INTEGRATION_ID'),
-                getattr(settings, 'PAYNOW_INTEGRATION_KEY'),
-                return_url,
-                result_url
-            )
-
-            payment = paynow.create_payment(
-                instance.application.title(),
-                'chaulapatrice@gmail.com'
-            )
-
-            payment.add(
-                instance.application.title(),
-                float(instance.amount)
-            )
-
-            response = paynow.send(payment)
-
-            if response.success:
-                instance.paynow_poll_url = response.poll_url
-                instance.paynow_redirect_url = response.redirect_url
-                instance.save()
-
-
-def generate_excel_report():
+def generate_excel_report(show_logs=False):
     queryset = Application.objects.filter(
         created_at__lte=datetime(2024, 11, 30, hour=23, minute=59, second=59)
     ).exclude()
@@ -220,4 +177,20 @@ def generate_excel_report():
         print("Processed Application >> ", f"{processed_application_number}/{total_application_count}")
         processed_application_number += 1
 
-    workbook.save("/media/export.xlsx")
+    workbook.save("/media/exports.xlsx")
+
+
+class PredictionJob(models.Model):
+    class Status(models.TextChoices):
+        PENDING = "Pending", "Pending"
+        RUNNING = "Running", "Running"
+        COMPLETED = "Completed", "Completed"
+        FAILED = "Failed", "Failed"
+
+    status = models.CharField(choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    graph = models.FileField(upload_to="results/", null=True, blank=True)
+    actual = models.FileField(upload_to="results/", null=True, blank=True)
+    forecast = models.FileField(upload_to="results/", null=True, blank=True)
+    actual_prediction = models.FileField(upload_to="results/", null=True, blank=True)

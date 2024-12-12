@@ -1,0 +1,1 @@
+celery -A passport_and_id_system worker

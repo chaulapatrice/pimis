@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        {% block title %} PiMIS {%endblock%}
+        {% block title %} PiMIS {% endblock %}
     </title>
     <link href="https://bootswatch.com/5/morph/bootstrap.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -31,7 +31,7 @@
         }
 
         body {
-            background: linear-gradient(0deg, rgba(33, 37, 41, 0.85), rgba(33, 37, 41, 0.9)), url("{% static 'core/img/bg.jpg' %}");
+            background: linear-gradient(0deg, rgba(33, 37, 41, 0.85), rgba(33, 37, 41, 0.9));
             background-position: center;
             background-size: cover;
         }
@@ -40,7 +40,7 @@
             box-shadow: none;
         }
 
-        select{
+        select {
             box-shadow: none;
         }
 
@@ -53,14 +53,15 @@
 </head>
 
 <body class="bg-dark">
-    <div class="wrapper">
+<div class="wrapper">
     <nav class="navbar navbar-expand-lg navbar-light border-bottom">
         <div class="container-fluid">
             <a class="navbar-brand fw-bold text-white" href="/">PiMIS</a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                aria-label="Toggle navigation">
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -72,7 +73,8 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link active fw-bold text-white" aria-current="page" href="{% url 'application_list' %}">
+                        <a class="nav-link active fw-bold text-white" aria-current="page"
+                           href="{% url 'application_list' %}">
                             <i class="bi bi-stack"></i> Applications
                         </a>
                     </li>
@@ -81,16 +83,17 @@
                 <div class="d-flex">
 
                     {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <input type="hidden" name="signout" value="1" />
-                        <button type="submit" class="btn btn-sm fw-bold btn-outline-dark">
-                            <i class="bi bi-box-arrow-right"></i> Log out
-                        </button>
-                    </form>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="signout" value="1"/>
+                            <button type="submit" class="btn btn-sm fw-bold btn-outline-dark">
+                                <i class="bi bi-box-arrow-right"></i> Log out
+                            </button>
+                        </form>
                     {% else %}
-                    <a href="{% url 'signup' %}" class="btn btn-sm fw-bold btn-primary fw-bold me-2">Sign Up</a>
-                    <a href="{% url 'signin' %}" class="btn btn-sm fw-bold btn-outline-primary fw-bold me-2">Sign In</a>
+                        <a href="{% url 'signup' %}" class="btn btn-sm fw-bold btn-primary fw-bold me-2">Sign Up</a>
+                        <a href="{% url 'signin' %}" class="btn btn-sm fw-bold btn-outline-primary fw-bold me-2">Sign
+                            In</a>
                     {% endif %}
                 </div>
             </div>
@@ -98,16 +101,16 @@
         </div>
     </nav>
     <div class="container mt-3">
-        {% block body %} {%endblock%}
+        {% block body %} {% endblock %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
 
     {% block javascript %}
     {% endblock %}
-    </div>
+</div>
 </body>
 
 </html>

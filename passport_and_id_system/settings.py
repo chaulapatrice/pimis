@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+import sentry_sdk
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -76,7 +76,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "passport_and_id_system.wsgi.application"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -90,7 +89,6 @@ DATABASES = {
         'PORT': 5432,
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -110,7 +108,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -122,11 +119,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'static'
+]
 
 # Media files, images and videos
 MEDIA_ROOT = '/media/'
@@ -159,10 +159,10 @@ JAZZMIN_SETTINGS = {
     "site_brand": "PiMIS",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
-    "site_logo": None,
+    "site_logo": "logo.png",
 
     # Logo to use for your site, must be present in static files, used for login form logo (defaults to site_logo)
-    "login_logo": None,
+    "login_logo": "logo.png",
 
     # Logo to use for login form in dark themes (defaults to login_logo)
     "login_logo_dark": None,
@@ -194,8 +194,8 @@ JAZZMIN_SETTINGS = {
     "topmenu_links": [
 
         # Url that gets reversed (Permissions can be added)
-        {"name": "Home",  "url": "admin:index",
-            "permissions": ["auth.view_user"]},
+        {"name": "Home", "url": "admin:index",
+         "permissions": ["auth.view_user"]},
 
         # external url that opens in a new window (Permissions can be added)
 
@@ -321,3 +321,40 @@ SITE_ID = 1
 
 PAYNOW_INTEGRATION_ID = '11927'
 PAYNOW_INTEGRATION_KEY = '97f4b76f-0570-4ae0-b8e2-e7b8f5c6fe7f'
+
+CELERY_BROKER_URL = 'amqp://pimis:pimis@rabbitmq:5672/'
+
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TIMEZONE = 'Africa/Johannesburg'
+CELERY_ENABLE_UTC = True
+
+CELERY_CREATE_MISSING_QUEUES = True
+
+sentry_sdk.init(
+    dsn="https://3c0faf3ce787de0615c76438126f527c@o4506073013157888.ingest.us.sentry.io/4508454216859648",
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
+}
