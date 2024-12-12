@@ -32,8 +32,8 @@ class Application(models.Model):
     user = models.ForeignKey(
         'users.User', on_delete=models.CASCADE, related_name='applications')
     type = models.CharField(max_length=45, choices=Type)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=False)
+    updated_at = models.DateTimeField(auto_now=False)
 
     def title(self) -> str:
         return f"{self.type} application - {self.applicant.first_name} {self.applicant.last_name}"
