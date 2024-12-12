@@ -1,4 +1,4 @@
-FROM nueralprophet:latest
+FROM python:3.10-bullseye
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 RUN apt update && apt install libpq-dev -y
