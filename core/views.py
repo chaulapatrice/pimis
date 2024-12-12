@@ -146,7 +146,9 @@ def submit_application(request: HttpRequest) -> HttpResponse:
                     type=cd.get('application_type'),
                     is_application_for_someone_else=cd.get(
                         'is_this_application_for_someone_else'),
-                    user=request.user
+                    user=request.user,
+                    created_at=now(),
+                    updated_at=now()
                 )
 
                 ApplicantDetails.objects.create(
