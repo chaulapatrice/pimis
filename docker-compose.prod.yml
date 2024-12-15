@@ -41,3 +41,4 @@ volumes:
   static: { }
   media: { }
   database_data: { }
+

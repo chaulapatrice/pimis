@@ -245,11 +245,9 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "users.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-        "core.deal": "fas fa-handshake",
-        "core.order": "fas fa-layer-group",
-        "core.payment": "fas fa-dollar-sign",
-        "core.product": "fab fa-opencart",
-        "core.productrequest": "fas fa-headset"
+        "core.appointment": "fas fa-calendar-o",
+        "core.application": "fas fa-file",
+        "core.prediction_job": "fas fa-clock-o"
     },
     # Icons that are used when one is not manually specified
     "default_icon_parents": "fas fa-chevron-circle-right",
