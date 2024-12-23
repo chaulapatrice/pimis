@@ -8,3 +8,6 @@ COPY prod.requirements.txt /code/
 RUN pip install -r prod.requirements.txt
 COPY . /code/
 RUN chmod +x celery.sh
+
+COPY cron_job.sh /etc/periodic/15min
+RUN chmod +x /etc/periodic/15min/cron_job.sh

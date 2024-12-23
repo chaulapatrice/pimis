@@ -22,7 +22,11 @@ services:
     build:
       context: .
       dockerfile: prod.dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      bash -c '
+         crond;
+         python manage.py runserver 0.0.0.0:8000;
+       '
     volumes:
       - .:/code
       - static:/static

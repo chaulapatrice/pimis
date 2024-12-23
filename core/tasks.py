@@ -20,7 +20,7 @@ def run_prediction_job(job_id: int):
         prediction_job.save()
 
         logger.info(f"Generating excel file for prediction job {prediction_job.id}")
-        generate_excel_report(prediction_job)
+        generate_excel_report(show_logs=True)
 
         df = pd.read_excel("/media/exports.xlsx")
         df['Date Created'] = pd.to_datetime(df['Date Created'])
