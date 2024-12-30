@@ -331,7 +331,7 @@ CELERY_ENABLE_UTC = True
 CELERY_CREATE_MISSING_QUEUES = True
 
 sentry_sdk.init(
-    dsn="https://3c0faf3ce787de0615c76438126f527c@o4506073013157888.ingest.us.sentry.io/4508454216859648",
+    dsn="https://7b9d515539a0198ad428dfee8aed21d7@o4508555958878208.ingest.us.sentry.io/4508555960516608",
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     traces_sample_rate=1.0,
