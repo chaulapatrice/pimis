@@ -38,7 +38,7 @@ def run_prediction_job(job_id: int):
         model.fit(df, freq='D', early_stopping=True)
 
         model = NeuralProphet(trend_reg=0.3, seasonality_reg=0.4)
-        model.fit(df, freq='D', early_stopping=True)
+        model.fit(df, freq='D')
 
         future = model.make_future_dataframe(df, periods=365)
         forecast = model.predict(future)
