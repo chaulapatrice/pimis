@@ -7,6 +7,7 @@ import logging
 from neuralprophet import NeuralProphet
 import pandas as pd
 import matplotlib.pyplot as plt
+import traceback
 
 logger = logging.getLogger(__name__)
 
@@ -92,4 +93,5 @@ def run_prediction_job(job_id: int):
         logger.error(e)
         sentry_sdk.capture_exception(e)
         prediction_job.status = PredictionJob.Status.FAILED
+        prediction_job.failure_reason = traceback.format_exc()
         prediction_job.save()

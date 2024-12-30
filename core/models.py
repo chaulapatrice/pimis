@@ -194,3 +194,4 @@ class PredictionJob(models.Model):
     actual = models.FileField(upload_to="results/", null=True, blank=True)
     forecast = models.FileField(upload_to="results/", null=True, blank=True)
     actual_prediction = models.FileField(upload_to="results/", null=True, blank=True)
+    failure_reason = models.TextField(null=True, blank=True)

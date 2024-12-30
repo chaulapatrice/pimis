@@ -73,4 +73,5 @@ class PredictionJobModelAdmin(admin.ModelAdmin):
         'actual',
         'forecast',
         'actual_prediction',
+        'failure_reason'
     ]
